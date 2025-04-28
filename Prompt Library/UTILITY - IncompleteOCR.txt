@@ -1,0 +1,12 @@
+You’re going to review unstructured OCR text from a herbarium label.  Each individual label is named for a catalog number like BRIT16446
+
+Please review the text for incomplete words at the beginning of each line.
+
+QUALITY - "GOOD" for complete words at the beginning of each line, "BAD" for multiple lines of incomplete words at the beginning of each line, "BLANK" for empty text files.
+
+
+Please format this as a JSON using the following fields:
+
+{
+"QUALITY":
+}

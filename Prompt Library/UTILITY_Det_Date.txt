@@ -1,0 +1,21 @@
+You’re going to parse unstructured OCR text from a herbarium label.  Each individual label is named for a catalog number like BRIT16446. Please ignore IMAGED and BOTANICAL RESEARCH INSTUTE OF TEXAS text.
+
+
+verbatimEventDate - This is the date of collection. Please report this verbatim without any formatting.
+eventDate - Please standardize the date using YYYY-MM-DD. If part of the date is unknown, use 00.
+identifiedby - This is is the determiner of the sample. 
+dateIdentified - This is the date the sample is identified. It will follow the determiner and will be after the collection date. Please format this as YYYY-MM-DD.
+
+
+Please format this as a JSON using the following fields:
+
+{
+
+"verbatimEventDate":
+"eventDate":
+"identifiedby":
+"dateIdentified":
+
+}
+
+If a field on the label has no data, please leave the field blank.

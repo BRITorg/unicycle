@@ -1,0 +1,61 @@
+You’re going to parse unstructured OCR text from a herbarium label.  Each individual label is named for a catalog number like BRIT16446. Please ignore IMAGED and BOTANICAL RESEARCH INSTUTE OF TEXAS text.
+
+This label contains the following information:
+IMAGED - The IMAGED stamp and date. It will follow IMAGED and will be after Jan 1, 2018
+DNL-FAMILY - The specimen's scientific family.
+DNL-SCI_NAME - The specimen's scientific name.
+AUTHORITY - The name or acronym of the authority for the scientific name. It will follow the scientific name.
+identificationQualifier - contains "?", "aff.", or "cf."
+locality - This is the description of the region and exact location where the sample was collected. Please include the province.
+stateProvince - This is the province where the sample was collected.
+verbatimElevation - This is the altitude or range of altitudes. If there's a "m" suffix, please include it.
+minimumElevationInMeters - put the lowest integer value of elevation here.
+maximumElevationInMeters - put the highest integer value of elevation here. If there is only one value, leave this blank.
+verbatimCoordinates - this is the verbatim latitude and longitude or XY location of the sample.
+decimalLatitude  - latitude in decimal degrees
+decimalLongitude - longitude in decimal degrees
+georeferenceRemarks - when a sample has verbatimCoordinates, please populate this with "[Verbatim coordinates from label, converted to decimal degrees]"
+habitat - This is details of the sample's habitat. 
+verbatimAttributes - This is the description of the individual plant, flower, flower buds, fruit, petiole, monocarps, anthers, or any other plant part.  Please parse this data verbatim. Make sure there's a space between different words. Please enter the entire plant description as a single entry, even if it spans multiple lines. Please remove any /n characters. 
+recordedBy - The name of the first collector.
+recordNumber - This is the collection number.
+associatedCollectors - This is the name or names of other collectors after the first collector.
+verbatimEventDate - This is the date of collection. Please report this verbatim without any formatting.
+eventDate - Please standardize the date using YYYY-MM-DD. If part of the date is unknown, use 00.
+identifiedby - This is is the determiner of the sample. It will follow "Det."
+dateIdentified - This is the date the sample is identified. It will follow the determiner and will be after the collection date. Please format this as YYYY-MM-DD.
+occurrenceRemarks - Please include any remaining information at the end of the text including institutions involved and instructions for new determinations. Please remove any /n characters. Please use a "[" at the beginning of this field, and a "]" at the end.
+materialSample-remarks - Notes on other samples available. This includes "DNA material available".
+associatedtaxa - other scientific names of species found with the sample. They will usually be included with habitat. Please duplicate the scientific names in this field.
+Please format this as a JSON using the following fields:
+
+{
+'IMAGED":
+"DNL-FAMILY":
+"DNL-SCI_NAME":
+"AUTHORITY":
+"identificationQualifier"
+"locality":
+"stateProvince":
+"verbatimElevation":
+"minimumElevationInMeters":
+"maximumElevationInMeters":
+"verbatimCoordinates":
+"decimalLatitude":
+"decimalLongitude":
+"georeferenceRemarks":
+"habitat":
+"verbatimAttributes":
+"recordedBy":
+"recordNumber":
+"associatedCollectors":
+"verbatimEventDate":
+"eventDate":
+"identifiedby":
+"dateIdentified":
+"occurrenceRemarks":
+"materialSample-remarks":
+"associatedtaxa":
+}
+
+If a field on the label has no data, please leave the field blank.

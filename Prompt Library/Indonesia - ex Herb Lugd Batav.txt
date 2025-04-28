@@ -1,0 +1,30 @@
+You’re going to parse unstructured OCR text from a herbarium label. This label contains the following information:
+Fam: 
+SCI. NAME - This is the genus and species. It will follow "Nom.:"
+AUTHOR - The acronym of the author of the plant species, and will immediately follow the species name.
+COLLECTOR - The collector's name, and will follow "Leg.:"
+NO - The collection number. It will follow "No:"
+DATE - The date of collection. It will follow "Dat.:" Please keep this verbatim.
+DET - The name of the expert who identified the specimen. It will follow "Det.:"
+LOCATION - The location of the specimen. It will follow "Loc:"
+ALT - the altitude of the specimen. Please include the unit of measurement.
+ANN - Any additional annotations. It will follow "Annot:"
+
+If a field on the label has no data, please fill in "N/A." If the entire text file is blank, fill in "N/A" for all fields.
+
+Please format this as a JSON using the following fields:
+
+{
+
+  "SCI. NAME":
+  "AUTHOR":
+  "COLLECTOR":
+  "NO":
+  "DATE":
+  "DET":
+  "LOCATION":
+  "ALT":
+  "ANN":
+
+}
+

@@ -1,0 +1,44 @@
+You’re going to parse unstructured OCR text from a herbarium label.  Each individual label is named for a catalog number like BRIT16446. Please ignore IMAGED and BOTANICAL RESEARCH INSTUTE OF TEXAS text.
+
+This label contains the following information:
+FAMILY - The specimen's scientific family.
+SCI_NAME - The specimen's scientific name.
+locality - This is a description of the region and exact location where the sample was collected. 
+island - The island where the sample was collected.
+stateProvince - This is the province where the sample was collected.
+LAT  - If this field is blank, please put “N/A”
+LONG - If this field is blank, please put “N/A”
+verbatimElevation - This is the altitude. If there's a "m" suffix, please include it. If this field is blank, please put “N/A”
+habitat - This is details of the sample's habitat. 
+verbatimAttributes - This is the description of the individual plant, flower, flower buds, fruit, petiole, monocarps, anthers, or any other plant part.  Please parse this data verbatim. Make sure there's a space between different words. Please enter the entire plant description as a single entry, even if it spans multiple lines. Please remove any /n characters. 
+recordedBy - The name of the collector.
+recordNumber - This is the collection number.
+associatedCollectors - This is the name or names of other collectors. It will follow "With" or "Collected with"
+DATE - This is the date of collection. Please report this verbatim without any formatting. It may include ".0."
+STD_DATE - Please standardize the date using YYYY-MM-DD. If part of the date is unknown, use 00.
+HERBARIA - The herbia where duplicates were sent
+occurrenceRemarks - remaining information at the bottom of the label including institutions involved and instructions for new determinations. Please remove any /n characters. 
+
+Please format this as a JSON using the following fields:
+
+{
+"FAMILY":
+"SCI_NAME":
+"locality":
+"island":
+"stateProvince":
+"LAT":
+"LONG":
+"verbatimElevation":
+"habitat":
+"verbatimAttributes":
+"recordedBy":
+"recordNumber":
+"associatedCollectors":
+"verbatimEventDate":
+"eventDate":
+"DUPLICATES"
+"occurrenceRemarks":
+}
+
+If a field on the label has no data, please fill in "N/A." If the entire text file is blank, fill in "N/A" for all fields.

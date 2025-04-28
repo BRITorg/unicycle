@@ -1,0 +1,57 @@
+You’re going to parse unstructured OCR text from a herbarium label. This label contains the following information:
+
+ANN_NAME - This is the scientific name that will be before FLORA OF VIETNAM in the text. 
+ANN_AUTHOR - This is the author or authors of the plant species before FLORA OF VIETNAM in the text, and will immediately follow the species name.
+ANN_BY - This is the botanist's name that will before FLORA OF VIETNAMin the text. It will usually follow "Det. by"
+ANN_DATE - This date will be before the FLORA OF VIETNAM in the text.
+COLLECTION - This should read "FLORA OF VIETNAM"
+DUPL 
+FAMILY
+SCI. NAME
+AUTHOR - This is the author or authors of the plant species, and will immediately follow the species name.
+COUNTRY
+PROVINCE
+LOCATION
+HABITAT - This is a description of the environment where the specimen was collected. This will often describe the forest, humidity, and other plants.
+DESCRIPTION - This is a description of the plant's type (shrub, tree, herb), flowers, petals, or any other plant part.
+ALTITUDE
+COORDINATES - This is the latitude and longitude.
+INSTITUTIONS - Acronyms of the participating herbaria.
+DATE - This will be structured YYYY-MM-DD.
+COLLECTORS - Names of the collectors
+COLL NO - This number will follow the collectors names.
+NOTES - additional notes about the expedition and permit
+DUPLICATE - Text begininning with "This specimen is a duplicate of"
+
+If a field on the label has no data, please fill in "N/A."
+
+Please format this as a JSON using the following fields:
+
+{
+
+  "ANN_NAME":
+  "ANN_AUTHOR":
+  "ANN_BY":
+  "ANN_DATE":
+  "COLLECTION":
+  "DUPL":
+  "FAMILY":
+  "SCI. NAME":
+  "AUTHOR":
+  "COUNTRY":
+  "PROVINCE":
+  "LOCATION":
+  "HABITAT":
+  "DESCRIPTION":
+  "ALTITUDE":
+  "COORDINATES":
+  "INSTITUTIONS":
+  "DATE":
+  "COLLECTORS":
+  "COLL NO":
+  "NOTES
+  "DUPLICATE"
+
+}
+
+If a field on the label has no data, please fill in "N/A." If the entire text file is blank, fill in "N/A" for all fields.

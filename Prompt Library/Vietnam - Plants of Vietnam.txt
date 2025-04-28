@@ -1,0 +1,52 @@
+You’re going to parse unstructured OCR text from a herbarium label.  Each individual label is named for a catalog number like BRIT16446
+
+This label contains the following information:
+
+You’re going to parse unstructured OCR text from a herbarium label. This label contains the following information:
+FAMILY
+File NY
+SCI. NAME
+DET - This is the botanist who determined the species. It will have a "det." prefix.
+DET DATE - This is the date of the species deterimination. It will follow the DET name.
+COUNTRY
+PROVINCE
+DISTRICT
+LOCATION
+LATITUDE  - If this field is blank, please put “N/A”. Please replace "’" with "'" 
+LONGITUDE - If this field is blank, please put “N/A”. Please replace "’" with "'" 
+ELEVATION
+HABITAT - This is a description of the environment where the specimen was collected. This will often describe the forest, humidity, and other plants.
+DESCRIPTION - This is the description of the individual plant, flower, flower buds, fruit, petiole, monocarps, anthers, or any other plant part.
+COLLECTOR - This is the name of the botanist who collected the plant.
+COLL NO - This is the collector number that follows the collector's name.
+DATE
+
+
+
+
+If a field on the label has no data, please fill in "N/A."
+
+Please format this as a JSON using the following fields:
+
+{
+"FAMILY"
+"File NY"
+"SCI. NAME"
+"DET"
+"DET DATE"
+"COUNTRY"
+"PROVINCE"
+"DISTRICT"
+"LOCATION"
+"LATITUDE"
+"LONGITUDE"
+"ELEVATION"
+"HABITAT"
+"DESCRIPTION"
+"COLLECTOR"
+"COLL NO"
+"DATE"
+
+}
+
+If a field on the label has no data, please fill in "N/A." If the entire text file is blank, fill in "N/A" for all fields.

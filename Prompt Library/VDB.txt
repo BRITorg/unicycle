@@ -1,0 +1,67 @@
+You’re going to parse unstructured OCR text from a herbarium label.  Each individual label is named for a catalog number like BRIT16446. Please ignore IMAGED and BOTANICAL RESEARCH INSTUTE OF TEXAS text. For every field with non-English text, please add a translation in English. The english translation should be bracketed by [  ]
+
+This label contains the following information:
+DNL-FAMILY - The specimen's scientific family.
+DNL-SCI_NAME - The specimen's scientific name.
+AUTHORITY - The name or acronym of the authority for the scientific name. It will follow the scientific name.
+identificationQualifier - contains "?", "aff.", or "cf."
+locality - This is a description of the region and exact location where the sample was collected. 
+stateProvince - This is the state where the sample was collected. Please use the proper name only.
+county - This is the county containing the sample. Please use the proper name only, without "county", "Co.", "Province".
+verbatimElevation - This is the altitude or range of altitudes. If there's a "m", "ft", or ' suffix, please include it.
+minimumElevationInMeters - put the lowest integer value of elevation here.
+maximumElevationInMeters - put the highest integer value of elevation here. If there is only one value, leave this blank.
+verbatimCoordinates - this is the verbatim latitude and longitude or XY location of the sample.
+datum - this is the geoid or reference datum of the coordinates, like "WGS84". If there's no datum, leave this field blank.
+decimalLatitude  - latitude in decimal degrees
+decimalLongitude - longitude in decimal degrees
+georeferenceRemarks - when a sample has verbatimcoordinates that are degree minute second, please populate this with "[Verbatim coordinates from label, converted to decimal degrees]" when the verbatim coordinates are decimal degrees, populate this with "[Verbatim coordinates from label]"
+habitat - This is details of the sample's habitat. It can include rainfall, surrounding vegetation, 
+verbatimAttributes - This is the description of the individual plant, flower, flower buds, fruit, petiole, monocarps, anthers, or any other plant part.  Please parse this data verbatim. Make sure there's a space between different words. Please enter the entire plant description as a single entry, even if it spans multiple lines. Please remove any /n characters. 
+recordedBy - The name of the collector. It will often follow "Leg.:" "Et al." means "and others", so all variations of Et al should go in associated collectors.
+recordNumber - This is the collection number.
+associatedCollectors - This is the name or names of other collectors.
+verbatimEventDate - This is the date of collection. Please report this verbatim without any formatting.
+eventDate - Please standardize the date using YYYY-MM-DD. If part of the date is unknown, use 00.
+identifiedby - This is is the determiner of the sample. It will often follow "Coll:", "Det.", or "Det:"
+dateIdentified - This is the date the sample is identified. It will follow the determiner and will be after the collection date. Please format this as YYYY-MM-DD.
+othercatalognumbers - 
+occurrenceRemarks - Information on abundance ("common", "rare", "abundant"), or sheet number ("sheet 1 of 2"). Please remove any /n characters. 
+associatedTaxa - this contains a list of other scientific names found with the specimen.
+IMAGED-DATE - this is the date the specimen was imaged. It will be after 2015.
+BRIT-BARCODE - this is the barcode of the specimen, and will read BRIT followed by numbers. 
+
+Please format this as a JSON using the following fields:
+
+{
+"DNL-FAMILY":
+"DNL-SCI_NAME":
+"AUTHORITY":
+"identificationQualifier"
+"locality":
+"stateProvince":
+"county":
+"verbatimElevation":
+"minimumElevationInMeters":
+"maximumElevationInMeters":
+"verbatimCoordinates":
+"datum": 
+"decimalLatitude":
+"decimalLongitude":
+"georeferenceRemarks":
+"habitat":
+"verbatimAttributes":
+"recordedBy":
+"recordNumber":
+"associatedCollectors":
+"verbatimEventDate":
+"eventDate":
+"identifiedby":
+"dateIdentified":
+"othercatalognumbers"
+"occurrenceRemarks":
+"associatedTaxa"
+"IMAGED-DATE"
+}
+
+If a field on the label has no data, please leave the field blank.

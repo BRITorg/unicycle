@@ -1,0 +1,49 @@
+You’re going to parse unstructured OCR text from a herbarium label. For every field with non-English characters, please add a translation in English. The english translation should be bracketed by [  ]
+
+This label contains the following information:
+locality - This is a description of the location where the sample was collected. 
+verbatimElevation - This is the altitude or range of altitudes. If there's a "m", "ft", or ' suffix, please include it.
+minimumElevationInMeters - put the lowest integer value of elevation here.
+maximumElevationInMeters - put the highest integer value of elevation here. If there is only one value, leave this blank.
+verbatimCoordinates - this is the verbatim latitude and longitude or XY location of the sample.
+datum - this is the geoid or reference datum of the coordinates, like "WGS84"
+decimalLatitude  - latitude in decimal degrees
+decimalLongitude - longitude in decimal degrees
+georeferenceRemarks - when a sample has verbatimcoordinates that are degree minute second, please populate this with "[Verbatim coordinates from label, converted to decimal degrees]" when the verbatim coordinates are decimal degrees, populate this with "[Verbatim coordinates from label]"
+habitat - This is details of the sample's habitat. It can include rainfall, surrounding vegetation, or soil.
+substrate - this is details of the soil or geology of the specimen.
+verbatimAttributes - This is the description of the individual plant, flower, flower buds, fruit, petiole, monocarps, anthers, or any other plant part.  Please parse this data verbatim. Make sure there's a space between different words. Please enter the entire plant description as a single entry, even if it spans multiple lines. Please remove any /n characters. 
+
+verbatimEventDate - This is the date of collection. Please report this verbatim without any formatting.
+eventDate - Please standardize the date using YYYY-MM-DD. If part of the date is unknown, use 00.
+identifiedby - This is is the determiner of the sample. It will often follow "Coll:", "Det.", or "Det:"
+dateIdentified - This is the date the sample is identified. It will follow the determiner and will be after the collection date. Please format this as YYYY-MM-DD.
+othercatalognumbers - 
+occurrenceRemarks - Information on abundance ("common", "rare", "abundant") and any remaining information at the end of the text including institutions involved and instructions for new determinations. Please remove any /n characters. 
+OTHER - Any information in the text that doesn't fit in any other field
+
+Please format this as a JSON using the following fields:
+
+{
+"locality":
+"verbatimElevation":
+"minimumElevationInMeters":
+"maximumElevationInMeters":
+"verbatimCoordinates":
+"datum": 
+"decimalLatitude":
+"decimalLongitude":
+"georeferenceRemarks":
+"habitat":
+"substrate":
+"verbatimAttributes":
+"verbatimEventDate":
+"eventDate":
+"identifiedby":
+"dateIdentified":
+"othercatalognumbers"
+"occurrenceRemarks":
+"OTHER":
+}
+
+If a field on the label has no data, please leave the field blank.

@@ -1,0 +1,48 @@
+You’re going to parse unstructured OCR text from a herbarium label.  Each individual label is named for a catalog number like BRIT16446. Please ignore IMAGED and BOTANICAL RESEARCH INSTUTE OF TEXAS text.
+
+This label contains the following information:
+DNL-FAMILY - The specimen's scientific family.
+DNL-SCI_NAME - The specimen's scientific name.
+locality - This is a description of the region and exact location where the sample was collected. Please include the province. 
+stateProvince - This is the province where the sample was collected.
+verbatimElevation - This is the altitude. If there's a "m" suffix, please include it.
+minimumElevationInMeters - put the lowest integer value of elevation here.
+maximumElevationInMeters - put the highest integer value of elevation here. If there is only one value, leave this blank.
+verbatimCoordinates - this is the verbatim latitude and longitude of the collection. 
+decimalLatitude  - latitude in decimal degrees
+decimalLongitude - longitude in decimal degrees
+georeferenceRemarks - when a sample has geographic coordinates, please populate this with "[Verbatim coordinates from label, converted to decimal degrees]"
+habitat - This is details of the sample's habitat. Please include associated species verbatim.
+verbatimAttributes - This is the description of the individual plant, flower, flower buds, fruit, petiole, monocarps, anthers, or any other plant part.  Please parse this data verbatim. Make sure there's a space between different words. Please enter the entire plant description as a single entry, even if it spans multiple lines. Please remove any /n characters. 
+recordedBy - The name of the collector.
+recordNumber - This is the collection number. It immediately follows the collector number.
+associatedCollectors - This is the name or names of other collectors. 
+verbatimEventDate - This is the date of collection. Please report this verbatim without any formatting.
+eventDate - Please standardize the date using YYYY-MM-DD. If part of the date is unknown, use 00.
+associatedtaxa - other species that are found with the specimen. It will follow "with" in the Habitat
+
+Please format this as a JSON using the following fields:
+
+{
+"DNL-FAMILY":
+"DNL-SCI_NAME":
+"locality":
+"stateProvince":
+"verbatimElevation":
+"minimumElevationInMeters":
+"maximumElevationInMeters":
+"verbatimCoordinates":
+"decimalLatitude":
+"decimalLongitude":
+"georeferenceRemarks":
+"habitat":
+"verbatimAttributes":
+"recordedBy":
+"recordNumber":
+"associatedCollectors":
+"verbatimEventDate":
+"eventDate":
+"associatedtaxa":
+}
+
+If a field on the label has no data, please leave the field blank.

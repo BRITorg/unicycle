@@ -1,0 +1,28 @@
+You’re going to parse unstructured OCR text from a herbarium label.  Each individual label is named for a catalog number like BRIT16446. Please ignore IMAGED and BOTANICAL RESEARCH INSTUTE OF TEXAS text.
+
+This label contains the following information:
+locality - This is a description of the location where the sample was collected and will include island and province.
+island - This is the island where the sample was collected.
+stateProvince - This is the  province where the sample was collected.
+recordNumber - This is the collection number.
+verbatimEventDate - This is the date of collection. Please report this verbatim without any formatting.
+eventDate - Please standardize the date using YYYY-MM-DD. Please substitute 00 for missing months or days. As an example. "Aug 1995" would be 1995-08-00
+SCI_NAME - The specimen's scientific name. It will follow "Field det."
+recordedBy - The name of the collector or collectors.
+occurrenceRemarks - The herbia where duplicates were sent. This includes "Dupl" and following herbaria.  Please use a "[" at the beginning of this field, and a "]" at the end.
+
+Please format this as a JSON using the following fields:
+
+{
+"locality":
+"island"
+"stateProvince":
+"recordNumber":
+"verbatimEventDate":
+"eventDate":
+"SCI_NAME":
+"recordedBy":
+"occurrenceRemarks"
+}
+
+If a field on the label has no data, please fill in "N/A." If the entire text file is blank, fill in "N/A" for all fields.

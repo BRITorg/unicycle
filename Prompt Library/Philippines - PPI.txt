@@ -1,0 +1,51 @@
+You’re going to parse unstructured OCR text from a herbarium label.  Each individual label is named for a catalog number like BRIT16446. Please ignore IMAGED and BOTANICAL RESEARCH INSTUTE OF TEXAS text.
+
+This label contains the following information:
+
+ANN_NAME - This is the scientific name before the PHILIPPINE PLANT INVENTORY PPI in the text.
+ANN_AUTH - This is the author citation of the scientific name before the PHILIPPINE PLANT INVENTORY PPI in the text. It will follow the scientifc name and include things like Blume, L., Merr. Roxb.
+ANN_DATE - This date will be before the PHILIPPINE PLANT INVENTORY PPI in the text.
+ANN_DET - This is the name of the botanist before the PHILIPPINE PLANT INVENTORY PPI in the text. Please include the institution acronym that follows their name: (K), (L), (BRIT)
+COLL - This is the name or names of the collectors. It will appear after COLL:
+PPI No - This is an additional catalog number. Please include just the number without a PPI prefix.
+ISL - The Philippines island where the sample was collected.
+DATE - This is the date of collection. Please report this verbatim without any formatting.
+PROV - This is the Philippines province where the sample was collected.
+LOC - This is a description of the exact location where the sample was collected.
+ALT - This is the altitude. If there's a "m" suffix, please include it.
+LAT  - If this field is blank, please put “N/A”. Please replace "’" with "'" 
+LONG - If this field is blank, please put “N/A”. Please replace "F", "R", or "K" in this field with "E"  Please replace "’" with "'" 
+HAB - This is details of the sample's habitat. 
+SOIL - This describes the soil the sample was growing in. It often includes the words "clay", "loam", "volcanic", "ultramafic", "brown", or "dark".
+PL. DESC - This is the description of the individual plant, flower, flower buds, fruit, petiole, monocarps, anthers, or any other plant part.  Please parse this data verbatim, leaving abbreviations like "dk grn" "lt grn" "blw" "flw" "wht", "frt" "grn" as is. Make sure there's a space between different words. Please enter the entire plant description as a single entry, even if it spans multiple lines. Please remove any /n characters. 
+VEG - This is a description of the vegetation around the sample. It will often be something like "Dipterocarp Forest", "Open Forest", "Primary forest", "Secondary forest".
+FAM
+DUP - This is the number of duplicates. It will follow "DUP.:" and will be an integer below 20.
+SCI. NAME 
+
+Please format this as a JSON using the following fields:
+
+{
+  "ANN_NAME":
+  "ANN_AUTH"
+  "ANN_DATE":
+  "ANN_DET":
+  "COLL":
+  "PPI No":
+  "ISL":
+  "DATE":
+  "PROV":
+  "LOC":
+  "ALT":
+  "LAT":
+  "LONG":
+  "HAB":
+  "SOIL":
+  "PL. DESC":
+  "VEG":
+  "FAM":
+  "DUP":
+  "SCI. NAME":
+}
+
+If a field on the label has no data, please fill in "N/A." If the entire text file is blank, fill in "N/A" for all fields.

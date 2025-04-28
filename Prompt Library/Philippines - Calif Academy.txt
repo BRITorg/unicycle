@@ -1,0 +1,51 @@
+You’re going to parse unstructured OCR text from a herbarium label.  Each individual label is named for a catalog number like BRIT16446. Please ignore IMAGED and BOTANICAL RESEARCH INSTUTE OF TEXAS text.
+
+This label contains the following information:
+FAMILY - The specimen's scientific family.
+SCI_NAME - The specimen's scientific name.
+ISL - The Philippines island where the sample was collected.
+REGION - The region the sample was collected.
+PROV - This is the Philippines province where the sample was collected.
+BARANGAY - The specimen's Barangay.
+LOC - This is a description of the region and exact location where the sample was collected. 
+
+LAT  - If this field is blank, please put “N/A”. Please replace "’" with "'" 
+LONG - If this field is blank, please put “N/A”. Please replace "F", "R", or "K" in this field with "E"  Please replace "’" with "'" 
+ALT - This is the altitude. If there's a "m" suffix, please include it.
+GEOID - This is the geoid used for the latitude and longitude. It will most often be WGS84.
+
+SOIL - This describes the soil the sample was growing in. It often includes the words "clay", "loam", "volcanic", "ultramafic", "brown", or "dark".
+
+HAB - This is details of the sample's habitat. 
+
+PL. DESC - This is the description of the individual plant, flower, flower buds, fruit, petiole, monocarps, anthers, or any other plant part.  Please parse this data verbatim. Make sure there's a space between different words. Please enter the entire plant description as a single entry, even if it spans multiple lines. Please remove any /n characters. 
+
+COLLECTORS - The names of the collectors.
+NUMBER - This is the collection number.
+DATE - This is the date of collection. Please report this verbatim without any formatting.
+STD_DATE - Please standardize the date using YYYY-MM-DD
+
+Please format this as a JSON using the following fields:
+
+{
+"FAMILY":
+"SCI_NAME":
+"ISL":
+"REGION":
+"PROV":
+"BARANGAY":
+"LOC":
+"LAT":
+"LONG":
+"ALT":
+"GEOID":
+"SOIL":
+"HAB":
+"PL. DESC":
+"COLLECTORS":
+"NUMBER":
+"DATE":
+"STD_DATE":
+}
+
+If a field on the label has no data, please fill in "N/A." If the entire text file is blank, fill in "N/A" for all fields.

@@ -1,0 +1,41 @@
+You’re going to parse unstructured OCR text from a herbarium label.  Each individual label is named for a catalog number like BRIT16446. Please ignore IMAGED and BOTANICAL RESEARCH INSTUTE OF TEXAS text.
+
+This label contains the following information:
+NUMBER - This is the collection number.
+FAMILY - The specimen's scientific family.
+SCI_NAME - The specimen's scientific name.
+PROVINCE - This is the province where the sample was collected.
+LOCATION - This is a description of the location where the sample was collected. 
+LAT  - If this field is blank, please put “N/A”
+LONG - If this field is blank, please put “N/A”
+ALT - This is the altitude. If there's a "m" suffix, please include it. If this field is blank, please put “N/A”
+DESCRIPTION - This is the description of the individual plant, flower, flower buds, fruit, petiole, monocarps, anthers, or any other plant part.  Please parse this data verbatim. Make sure there's a space between different words. Please enter the entire plant description as a single entry, even if it spans multiple lines. Please remove any /n characters. 
+COLLECTOR - The name of the collector or collectors.
+
+DATE - This is the date of collection. Please report this verbatim without any formatting.
+STD_DATE - Please standardize the date using YYYY-MM-DD
+DET - These are the initals and date that follow "det."
+DUPLICATES - The herbia where duplicates were sent
+
+Please format this as a JSON using the following fields:
+
+{
+"NUMBER":
+"FAMILY":
+"SCI_NAME":
+"PROVINCE":
+"LOCATION":
+"LAT":
+"LONG":
+"ALT":
+"HABITAT":
+"DESCRIPTION":
+"COLLECTOR":
+"ASSOC_COLL":
+"DATE":
+"STD_DATE":
+"DET"
+"DUPLICATES"
+}
+
+If a field on the label has no data, please fill in "N/A." If the entire text file is blank, fill in "N/A" for all fields.

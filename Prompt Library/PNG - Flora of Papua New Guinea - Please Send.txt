@@ -1,0 +1,42 @@
+You’re going to parse unstructured OCR text from a herbarium label.  Each individual label is named for a catalog number like BRIT16446. Please ignore IMAGED and BOTANICAL RESEARCH INSTUTE OF TEXAS text.
+
+This label contains the following information:
+FAMILY - The specimen's scientific family.
+SCI_NAME - The specimen's scientific name.
+LOCATION - This is a description of the region and exact location where the sample was collected. 
+ISLAND - The island where the sample was collected.
+PROVINCE - This is the  province where the sample was collected.
+LAT  - If this field is blank, please put “N/A”
+LONG - If this field is blank, please put “N/A”
+ALT - This is the altitude. If there's a "m" suffix, please include it. If this field is blank, please put “N/A”
+HABITAT - This is details of the sample's habitat. 
+DESCRIPTION - This is the description of the individual plant, flower, flower buds, fruit, petiole, monocarps, anthers, or any other plant part.  Please parse this data verbatim. Make sure there's a space between different words. Please enter the entire plant description as a single entry, even if it spans multiple lines. Please remove any /n characters. 
+COLLECTOR - The name of the collector.
+NUMBER - This is the collection number.
+ASSOC_COLL - This is the name or names of other collectors. It will follow "With" or "Collected with"
+DATE - This is the date of collection. Please report this verbatim without any formatting.
+STD_DATE - Please standardize the date using YYYY-MM-DD
+DUPLICATES - The herbia where duplicates were sent
+
+Please format this as a JSON using the following fields:
+
+{
+"FAMILY":
+"SCI_NAME":
+"LOCATION":
+"ISLAND":
+"PROVINCE":
+"LAT":
+"LONG":
+"ALT":
+"HABITAT":
+"DESCRIPTION":
+"COLLECTOR":
+"NUMBER":
+"ASSOC_COLL":
+"DATE":
+"STD_DATE":
+"DUPLICATES"
+}
+
+If a field on the label has no data, please fill in "N/A." If the entire text file is blank, fill in "N/A" for all fields.
