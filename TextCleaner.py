@@ -21,14 +21,39 @@ def process_files(input_folder):
     with open(csv_file, 'r', encoding='utf-8') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            if len(row) >= 2:  # Ensure there are at least find and replace columns
+            if len(row) >= 2:
                 replacements.append((row[0], row[1]))
+
+    # Set of lines to be removed if they are the only text on the line
+    unwanted_lines = {
+        "Botanical Research Institute of Texas",
+        "Botanical Research",
+        "Institute of Texas",
+        "BRIT",
+        "BRIT,",
+        "BOTANICAL RESEARCH",
+        "INSTITUTE",
+        "DALLAS TEXAS",
+        "DALLAS, TEXAS",
+        "HERBARIUM",
+        "Southern Methodist University",
+        "HERBARIUM OF SOUTHERN METHODIST UNIVERSITY",
+        "PLANTS OF OKLAHOMA",
+        "HERBARIUM OF SOUTHERN METHODIST UNIVERSITY",
+        "ANNOTATION LABEL",
+        "annotation LABEL",
+        "PLANTS ",
+        "PLANTS"
+
+    }
+
+    # Regex for date-only lines: DD MMM YYYY, year > 2014
+    date_pattern = re.compile(r"\s*\d{2} [A-Z]{3} 20(1[5-9]|[2-9]\d)\s*")
 
     # Loop through all files in the input folder
     for file_name in os.listdir(input_folder):
         file_path = os.path.join(input_folder, file_name)
 
-        # Process only .txt files
         if os.path.isfile(file_path) and file_name.endswith(".txt"):
             try:
                 with open(file_path, 'r', encoding='utf-8') as file:
@@ -45,30 +70,40 @@ def process_files(input_folder):
             for find_text, replace_text in replacements:
                 file_content = file_content.replace(find_text, replace_text)
 
-            # Remove any text that matches the pattern "BRIT" followed by numbers
-            file_content = re.sub(r"BRIT\d+", "", file_content)
+            # Extract the base filename without extension (e.g., "BRIT00869")
+            base_name = os.path.splitext(file_name)[0]
 
-            # Remove blank lines at the end and inside the text
-            file_content = '\n'.join([line for line in file_content.splitlines() if line.strip()])
+            # Extract the numeric portion from the base name (e.g., "00869")
+            numeric_part = ''.join(re.findall(r'\d+', base_name))
 
-            # Remove lines containing only dates in the format DD MMM YYYY with years > 2014 (case-sensitive)
-            file_content = '\n'.join([
-                line for line in file_content.splitlines()
-                if not re.fullmatch(r"\s*\d{2} [A-Z]{3} 20(1[5-9]|[2-9]\d)\s*", line.strip())
-            ])
+            # Remove exact matches of base_name and numeric_part
+            if base_name:
+                file_content = file_content.replace(base_name, "")
+            if numeric_part:
+                file_content = file_content.replace(numeric_part, "")
 
-            # Remove lines containing only "Botanical Research Institute of Texas"
-            file_content = '\n'.join([
-                line for line in file_content.splitlines()
-                if line.strip() != "Botanical Research Institute of Texas"
-            ])
 
-            # Save the filtered content in the 'filtered' folder
+            # Clean and filter lines
+            cleaned_lines = []
+            for line in file_content.splitlines():
+                stripped = line.strip()
+                if not stripped:
+                    continue  # Skip blank lines
+                if stripped in unwanted_lines:
+                    continue  # Skip known unwanted lines
+                if date_pattern.fullmatch(stripped):
+                    continue  # Skip date lines
+                cleaned_lines.append(line)
+
+            file_content = '\n'.join(cleaned_lines)
+
+            # Save the filtered content
             filtered_file_path = os.path.join(filtered_folder, file_name)
             with open(filtered_file_path, 'w', encoding='utf-8') as filtered_file:
                 filtered_file.write(file_content)
 
     print(f"Processed files are saved in the folder: {filtered_folder}")
+
 
 # Example usage
 if __name__ == "__main__":

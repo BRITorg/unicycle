@@ -3,6 +3,7 @@ import csv
 from PIL import Image
 from tqdm import tqdm
 import warnings
+from io import BytesIO
 
 # Suppress DecompressionBombWarning
 warnings.filterwarnings("ignore", category=Image.DecompressionBombWarning)
@@ -44,7 +45,32 @@ def check_dimensions_in_csv(folder_path, cropping_params):
             dimension_counts[dimensions]['count'] += 1
     return dimension_counts
 
-# Function to crop images based on parameters
+# Resize image iteratively to stay under 10MB
+def resize_to_fit_limit(img, target_bytes=10 * 1024 * 1024, step=0.9, min_scale=0.3, min_quality=70):
+    scale = 1.0
+    quality = 95
+
+    while scale >= min_scale:
+        buffer = BytesIO()
+        new_size = (int(img.width * scale), int(img.height * scale))
+        resized = img.resize(new_size, Image.LANCZOS)
+
+        # Save with current quality to buffer
+        resized.convert('RGB').save(buffer, format='JPEG', quality=quality)
+        size = buffer.tell()
+
+        if size <= target_bytes:
+            return resized
+
+        # Reduce scale and quality progressively
+        scale *= step
+        quality = max(min_quality, int(quality * 0.95))
+
+    # Last resort: return smallest version even if still oversized
+    return resized
+
+
+# Function to crop and resize images based on parameters
 def crop_images(folder_path, cropping_params):
     parent_dir = os.path.dirname(folder_path)
     output_folder = folder_path + "-cropped"
@@ -66,7 +92,13 @@ def crop_images(folder_path, cropping_params):
                     int(dimensions[1] * (1 - params['bottom']))
                 )
                 cropped_img = img.crop(crop_box)
-                cropped_img.save(os.path.join(output_folder, filename))
+
+                original_size = os.path.getsize(image_path)
+                if original_size > 10 * 1024 * 1024:
+                    cropped_img = resize_to_fit_limit(cropped_img)
+
+                output_path = os.path.join(output_folder, os.path.splitext(filename)[0] + ".jpg")
+                cropped_img.convert('RGB').save(output_path, format='JPEG', quality=95)
 
     print(f"Processing completed. Cropped images saved in: {output_folder}")
 

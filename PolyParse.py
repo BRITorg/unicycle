@@ -110,19 +110,24 @@ def main():
     print(f"\n[INFO] 'Prompt Library' found in: {system_role_directory}")
     system_role_file = select_system_role_file(system_role_directory)
 
-    input_dir = input("Enter the path to the directory containing input text files: ")
+    input_dir = input("Enter the path to the directory containing input text files: ").strip()
     parent_dir, input_folder_name = os.path.split(os.path.abspath(input_dir))
     
-    # Remove '-Textract' and '-Textract-filtered' if present in the input folder name
+    # Remove suffixes
     for suffix in ["-Textract", "-Textract-filtered"]:
         if input_folder_name.endswith(suffix):
             input_folder_name = input_folder_name[: -len(suffix)]
     
     output_dir = os.path.join(parent_dir, f"{input_folder_name}-PolyParse")
-    
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-    
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Ask user whether to overwrite existing output files
+    while True:
+        overwrite_choice = input("Overwrite existing files? (y = overwrite / n = skip): ").strip().lower()
+        if overwrite_choice in ['y', 'n']:
+            break
+        print("Please enter 'y' or 'n'.")
+
     input_files = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
     total_files = len(input_files)
 
@@ -132,6 +137,11 @@ def main():
         
         input_file = os.path.join(input_dir, filename)
         output_file = os.path.join(output_dir, filename.replace(".txt", ".json"))
+
+        # Skip if file exists and user chose not to overwrite
+        if os.path.exists(output_file) and overwrite_choice == 'n':
+            print(f"[SKIPPED] Output file already exists: {output_file}\n")
+            continue
         
         process_file(input_file, output_file, system_role_file)
         
