@@ -1,3 +1,8 @@
 aws_secrets.py
 PolyParse_secrets.py
 .env
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

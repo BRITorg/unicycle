@@ -26,36 +26,45 @@ if not images:
 
 # Amazon Textract client
 textract = boto3.client('textract',
-                        region_name='us-west-2',  # Specify your region here
+                        region_name='us-west-2',
                         aws_access_key_id=aws_secrets.aws_access_key_id,
                         aws_secret_access_key=aws_secrets.aws_secret_access_key)
 
+# Prompt user once for overwrite behavior
+overwrite_decision = input("Overwrite existing files? (y = overwrite / n = skip): ").strip().lower()
+overwrite = overwrite_decision == 'y'
+
 for image in images:
-    print(image)
-
-    # Read document content
-    with open(image, 'rb') as document:
-        imageBytes = bytearray(document.read())
-
-    # Call Amazon Textract
-    response = textract.detect_document_text(Document={'Bytes': imageBytes})
-
-    # Print detected text
-    response_json = json.dumps(response)
     image_path = Path(image)
     key = image_path.stem
-    
-    # Define output paths
+
     json_output_path = output_directory / f'{key}.json'
     text_output_path = output_directory / f'{key}.txt'
-    
-    # Save JSON response
-    with open(json_output_path, 'w') as json_file:
-        json_file.write(response_json)
 
-    # Save raw text results
-    with open(text_output_path, 'w') as txt_file:
-        for item in response["Blocks"]:
-            if item["BlockType"] == "LINE":
-                print(item['Text'])
-                txt_file.write(item['Text'] + '\n')
+    if not overwrite and json_output_path.exists() and text_output_path.exists():
+        print(f"Skipping {image_path.name} (already processed)")
+        continue
+
+    print(f"Processing: {image_path.name}")
+
+    try:
+        # Read document content
+        with open(image, 'rb') as document:
+            imageBytes = document.read()
+
+        # Call Amazon Textract
+        response = textract.detect_document_text(Document={'Bytes': imageBytes})
+
+        # Save JSON response
+        with open(json_output_path, 'w') as json_file:
+            json.dump(response, json_file)
+
+        # Save raw text results
+        with open(text_output_path, 'w', encoding='utf-8') as txt_file:
+            for item in response["Blocks"]:
+                if item["BlockType"] == "LINE":
+                    print(item['Text'])
+                    txt_file.write(item['Text'] + '\n')
+
+    except Exception as e:
+        print(f"Skipping {image_path.name} due to error: {e}")

@@ -119,7 +119,7 @@ if __name__ == "__main__":
     cropping_params = read_cropping_parameters(csv_file)
 
     # Prompt user to run precheck or skip it
-    run_precheck = input("Image dimensions precheck (1 min/1000? (Y/N): ").strip().upper()
+    run_precheck = input("Image dimensions precheck? This takes about a minute per 1000 images. (Y/N): ").strip().upper()
     if run_precheck == 'Y':
         # Check if all dimensions are listed in the CSV
         dimension_counts = check_dimensions_in_csv(folder_path, cropping_params)
