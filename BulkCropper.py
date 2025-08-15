@@ -1,6 +1,7 @@
 import os
 import csv
 from PIL import Image
+from PIL import ImageOps
 from tqdm import tqdm
 import warnings
 from io import BytesIO
@@ -46,61 +47,91 @@ def check_dimensions_in_csv(folder_path, cropping_params):
     return dimension_counts
 
 # Resize image iteratively to stay under 10MB
-def resize_to_fit_limit(img, target_bytes=10 * 1024 * 1024, step=0.9, min_scale=0.3, min_quality=70):
-    scale = 1.0
-    quality = 95
+TARGET_BYTES = 10 * 1024 * 1024
 
-    while scale >= min_scale:
-        buffer = BytesIO()
-        new_size = (int(img.width * scale), int(img.height * scale))
-        resized = img.resize(new_size, Image.LANCZOS)
+def predict_cropped_bytes(original_bytes, crop_box, orig_size):
+    # Predict new bytes ~ proportional to pixel area (good enough for a one-pass decision)
+    ox, oy = orig_size
+    cx = max(1, crop_box[2] - crop_box[0])
+    cy = max(1, crop_box[3] - crop_box[1])
+    area_ratio = (cx * cy) / float(ox * oy)
+    return int(original_bytes * area_ratio)
 
-        # Save with current quality to buffer
-        resized.convert('RGB').save(buffer, format='JPEG', quality=quality)
-        size = buffer.tell()
+def one_pass_resize_jpeg(img, max_bytes=TARGET_BYTES, base_quality=90):
+    """
+    Try a single encode; if still over limit, downscale once based on bytes ratio.
+    Optionally probe quality once more via a tiny binary search.
+    """
+    buf = BytesIO()
+    img.convert("RGB").save(buf, format="JPEG", quality=base_quality, optimize=True, progressive=True)
+    size = buf.tell()
+    if size <= max_bytes:
+        buf.seek(0)
+        return buf  # good
 
-        if size <= target_bytes:
-            return resized
+    # Estimate scale factor from bytes ratio (sqrt on area)
+    scale = (max_bytes / size) ** 0.5
+    if scale < 0.98:  # only bother if meaningful downscale
+        new_size = (max(1, int(img.width * scale)), max(1, int(img.height * scale)))
+        img = ImageOps.contain(img, new_size)  # fast multi-step shrink
 
-        # Reduce scale and quality progressively
-        scale *= step
-        quality = max(min_quality, int(quality * 0.95))
+    # Try again at same quality
+    buf = BytesIO()
+    img.convert("RGB").save(buf, format="JPEG", quality=base_quality, optimize=True, progressive=True)
+    size = buf.tell()
+    if size <= max_bytes:
+        buf.seek(0)
+        return buf
 
-    # Last resort: return smallest version even if still oversized
-    return resized
+    # Final small binary search on quality (2 more tries)
+    lo, hi = 70, base_quality  # don’t go lower than 70 by your original rule
+    for _ in range(2):
+        mid = (lo + hi) // 2
+        buf = BytesIO()
+        img.convert("RGB").save(buf, format="JPEG", quality=mid, optimize=True, progressive=True)
+        if buf.tell() <= max_bytes:
+            hi = mid
+        else:
+            lo = mid + 1
+    buf.seek(0)
+    return buf
 
-
-# Function to crop and resize images based on parameters
 def crop_images(folder_path, cropping_params):
-    parent_dir = os.path.dirname(folder_path)
     output_folder = folder_path + "-cropped"
     os.makedirs(output_folder, exist_ok=True)
+    image_files = [f for f in os.scandir(folder_path)
+                   if f.is_file() and f.name.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff'))]
 
-    image_files = [f for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff'))]
-
-    for filename in tqdm(image_files, desc="Cropping images"):
-        image_path = os.path.join(folder_path, filename)
+    for entry in tqdm(image_files, desc="Cropping images"):
+        image_path = entry.path
         with Image.open(image_path) as img:
             dimensions = img.size
+            params = cropping_params.get(dimensions)
+            if not params:
+                continue
 
-            if dimensions in cropping_params:
-                params = cropping_params[dimensions]
-                crop_box = (
-                    int(dimensions[0] * params['left']),
-                    int(dimensions[1] * params['top']),
-                    int(dimensions[0] * (1 - params['right'])),
-                    int(dimensions[1] * (1 - params['bottom']))
-                )
-                cropped_img = img.crop(crop_box)
+            crop_box = (
+                int(dimensions[0] * params['left']),
+                int(dimensions[1] * params['top']),
+                int(dimensions[0] * (1 - params['right'])),
+                int(dimensions[1] * (1 - params['bottom']))
+            )
+            cropped = img.crop(crop_box)
 
-                original_size = os.path.getsize(image_path)
-                if original_size > 10 * 1024 * 1024:
-                    cropped_img = resize_to_fit_limit(cropped_img)
+            original_bytes = entry.stat().st_size
+            # If predicted cropped bytes already < 10MB, save once
+            if predict_cropped_bytes(original_bytes, crop_box, dimensions) <= TARGET_BYTES:
+                out = BytesIO()
+                cropped.convert("RGB").save(out, format="JPEG", quality=90, optimize=True, progressive=True)
+            else:
+                out = one_pass_resize_jpeg(cropped, TARGET_BYTES, base_quality=90)
 
-                output_path = os.path.join(output_folder, os.path.splitext(filename)[0] + ".jpg")
-                cropped_img.convert('RGB').save(output_path, format='JPEG', quality=95)
+            output_path = os.path.join(output_folder, os.path.splitext(entry.name)[0] + ".jpg")
+            with open(output_path, "wb") as f:
+                f.write(out.getbuffer())
 
     print(f"Processing completed. Cropped images saved in: {output_folder}")
+
 
 # Main script
 if __name__ == "__main__":
@@ -119,7 +150,7 @@ if __name__ == "__main__":
     cropping_params = read_cropping_parameters(csv_file)
 
     # Prompt user to run precheck or skip it
-    run_precheck = input("Image dimensions precheck? This takes about a minute per 1000 images. (Y/N): ").strip().upper()
+    run_precheck = input("Image dimensions precheck? (Y/N): ").strip().upper()
     if run_precheck == 'Y':
         # Check if all dimensions are listed in the CSV
         dimension_counts = check_dimensions_in_csv(folder_path, cropping_params)
